@@ -316,10 +316,10 @@ document.getElementById('randomBtn').addEventListener('click', () => {
 // 4. STEALTH MODE (ZERO-WIDTH STEGANOGRAPHY)
 // ==========================================
 
-// The Invisible Characters
-const zeroPad = '\u200B'; // Zero-Width Space (Separator)
-const zeroOne = '\u200C'; // Zero-Width Non-Joiner (Binary 1)
-const zeroZero = '\u200D'; // Zero-Width Joiner (Binary 0)
+// The Android-Safe Invisible Characters
+const zeroPad = '\u200B';  // Zero-Width Space
+const zeroOne = '\u2060';  // Word Joiner (Safe)
+const zeroZero = '\uFEFF'; // Zero-Width No-Break Space (Safe)
 
 const publicTextInput = document.getElementById('publicTextInput');
 const secretTextInput = document.getElementById('secretTextInput');
@@ -329,6 +329,14 @@ const encodeFeedback = document.getElementById('encodeFeedback');
 const decodeInput = document.getElementById('decodeInput');
 const decodeBtn = document.getElementById('decodeBtn');
 const decodeOutput = document.getElementById('decodeOutput');
+
+// UX FIX: Double click to instantly clear the phantom text
+decodeInput.addEventListener('dblclick', () => {
+    decodeInput.value = '';
+    decodeOutput.innerText = "...";
+    decodeOutput.style.color = "#00ff41";
+    decodeOutput.classList.add('blinking-cursor');
+});
 
 // ENCODE LOGIC
 encodeBtn.addEventListener('click', () => {
@@ -346,7 +354,7 @@ encodeBtn.addEventListener('click', () => {
         return char.charCodeAt(0).toString(2).padStart(8, '0');
     }).join(' ');
 
-    // 2. Map binary to invisible characters
+    // 2. Map binary to Android-safe invisible characters
     let invisibleStr = binaryStr.split('').map(bit => {
         if (bit === '0') return zeroZero;
         if (bit === '1') return zeroOne;
@@ -358,7 +366,6 @@ encodeBtn.addEventListener('click', () => {
     const finalPayload = coverText + invisibleStr;
     
     navigator.clipboard.writeText(finalPayload).then(() => {
-        // UI Cyberpunk Feedback
         encodeFeedback.innerText = ">> ENCRYPTION SUCCESSFUL. PAYLOAD IN CLIPBOARD.";
         encodeFeedback.style.color = "#00ff41";
         
@@ -377,8 +384,8 @@ encodeBtn.addEventListener('click', () => {
 decodeBtn.addEventListener('click', () => {
     const mixedText = decodeInput.value;
     
-    // 1. Extract ONLY the invisible characters using Regex
-    const invisibleText = mixedText.replace(/[^\u200B\u200C\u200D]/g, '');
+    // 1. Extract ONLY the safe invisible characters using updated Regex
+    const invisibleText = mixedText.replace(/[^\u200B\u2060\uFEFF]/g, '');
     
     if (!invisibleText) {
         decodeOutput.innerText = "ERROR: NO HIDDEN DATA DETECTED.";
@@ -387,7 +394,7 @@ decodeBtn.addEventListener('click', () => {
         return;
     }
 
-    // 2. Translate invisible chars back to binary
+    // 2. Translate safe invisible chars back to binary
     const binaryStr = invisibleText.split('').map(char => {
         if (char === zeroZero) return '0';
         if (char === zeroOne) return '1';
