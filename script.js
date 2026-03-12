@@ -316,9 +316,9 @@ document.getElementById('randomBtn').addEventListener('click', () => {
 // 4. STEALTH MODE (ZERO-WIDTH STEGANOGRAPHY)
 // ==========================================
 
-// The Android-Safe Invisible Characters (Only 2 needed now!)
-const zeroZero = '\u200B'; // Zero-Width Space (Binary 0)
-const zeroOne = '\u2060';  // Word Joiner (Binary 1)
+// The Ultimate Android-Safe Invisible Characters
+const zeroZero = '\u200C'; // Zero-Width Non-Joiner (Binary 0)
+const zeroOne = '\u200D';  // Zero-Width Joiner (Binary 1)
 
 const publicTextInput = document.getElementById('publicTextInput');
 const secretTextInput = document.getElementById('secretTextInput');
@@ -349,12 +349,11 @@ encodeBtn.addEventListener('click', () => {
     }
 
     // 1. Convert secret to 16-bit binary (Supports all symbols & emojis!)
-    // Notice we no longer use .join(' ') with a space!
     let binaryStr = secretText.split('').map(char => {
         return char.charCodeAt(0).toString(2).padStart(16, '0');
     }).join('');
 
-    // 2. Map binary to Android-safe invisible characters
+    // 2. Map binary to the ultimate Android-safe invisible characters
     let invisibleStr = binaryStr.split('').map(bit => {
         if (bit === '0') return zeroZero;
         if (bit === '1') return zeroOne;
@@ -383,8 +382,8 @@ encodeBtn.addEventListener('click', () => {
 decodeBtn.addEventListener('click', () => {
     const mixedText = decodeInput.value;
     
-    // 1. Extract ONLY the safe invisible characters
-    const invisibleText = mixedText.replace(/[^\u200B\u2060]/g, '');
+    // 1. Extract ONLY our specific safe invisible characters using updated Regex
+    const invisibleText = mixedText.replace(/[^\u200C\u200D]/g, '');
     
     if (!invisibleText) {
         decodeOutput.innerText = "ERROR: NO HIDDEN DATA DETECTED.";
@@ -393,7 +392,7 @@ decodeBtn.addEventListener('click', () => {
         return;
     }
 
-    // 2. Translate invisible chars back to binary
+    // 2. Translate safe invisible chars back to binary
     const binaryStr = invisibleText.split('').map(char => {
         if (char === zeroZero) return '0';
         if (char === zeroOne) return '1';
