@@ -1,17 +1,21 @@
+/* =========================================
+   BASE & RESET
+   ========================================= */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Courier New', Courier, monospace; 
 }
 
 body {
-    background-color: #0f172a;
-    color: #f8fafc;
+    background-color: #050505; 
+    color: #00ff41;
     display: flex;
     justify-content: center;
     min-height: 100vh;
     padding: 2rem 1rem;
+    overflow-x: hidden;
 }
 
 .container {
@@ -19,46 +23,159 @@ body {
     width: 100%;
 }
 
+/* =========================================
+   HEADER & TABS
+   ========================================= */
 header {
     text-align: center;
     margin-bottom: 2rem;
 }
 
-header h1 {
-    font-family: 'Good Times', sans-serif; /* Applies your custom font */
-    font-size: 2.5rem;
-    color: #38bdf8;
+.glitch-title {
+    font-size: 2.8rem;
+    color: #0df; /* Electric Cyan */
     margin-bottom: 0.5rem;
-    letter-spacing: 2px; /* Adds a little spacing which looks great on this font */
+    letter-spacing: 3px;
+    text-shadow: 0 0 10px rgba(0, 221, 255, 0.5);
 }
 
-header p {
-    color: #94a3b8;
+.subtitle {
+    color: #475569;
+    font-size: 0.9rem;
+    letter-spacing: 2px;
+    margin-bottom: 2rem;
 }
 
+.tab-nav {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    border-bottom: 1px solid #1e293b;
+    padding-bottom: 1rem;
+}
+
+.tab-btn {
+    background: none;
+    border: none;
+    color: #64748b;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    padding: 0.5rem 1rem;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.tab-btn:hover {
+    color: #0df;
+}
+
+.tab-btn.active {
+    color: #00ff41;
+    border-bottom: 3px solid #00ff41;
+    text-shadow: 0 0 8px rgba(0, 255, 65, 0.4);
+}
+
+.tool-section { display: none; }
+.active-section { display: block; animation: fadeIn 0.3s ease; }
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* =========================================
+   SHARED INPUTS & BUTTONS
+   ========================================= */
+.cyber-input {
+    width: 100%;
+    padding: 1rem;
+    font-size: 1.1rem;
+    background-color: #0a0a0c;
+    border: 1px solid #1e293b;
+    color: #00ff41;
+    border-radius: 4px;
+    outline: none;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.cyber-input::placeholder { color: #334155; }
+.cyber-input:focus {
+    border-color: #0df;
+    box-shadow: 0 0 10px rgba(0, 221, 255, 0.2);
+}
+
+.dropdown-select {
+    width: 100%;
+    margin-top: 1rem;
+    padding: 1rem;
+    font-size: 1.1rem;
+    background-color: #0a0a0c;
+    color: #00ff41;
+    border: 1px solid #1e293b;
+    border-radius: 4px;
+    outline: none;
+    cursor: pointer;
+}
+.dropdown-select:focus { border-color: #0df; }
+
+.button-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
+}
+
+.neon-btn {
+    background-color: transparent;
+    color: #00ff41;
+    border: 1px solid #00ff41;
+    padding: 0.8rem 1.5rem;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.2s ease;
+}
+
+.neon-btn:hover {
+    background-color: rgba(0, 255, 65, 0.1);
+    box-shadow: 0 0 15px rgba(0, 255, 65, 0.3);
+}
+
+.neon-btn.alt-btn {
+    color: #0df;
+    border-color: #0df;
+}
+.neon-btn.alt-btn:hover {
+    background-color: rgba(0, 221, 255, 0.1);
+    box-shadow: 0 0 15px rgba(0, 221, 255, 0.3);
+}
+
+.w-100 { width: 100%; margin-top: 1rem; }
+
+.clear-link {
+    cursor: pointer;
+    color: #ef4444;
+    background: none;
+    border: none;
+    text-decoration: underline;
+    font-size: 0.9rem;
+}
+
+/* =========================================
+   TOOL 1: FONT GENERATOR
+   ========================================= */
 .input-section {
     margin-bottom: 2rem;
     position: sticky;
     top: 10px;
     z-index: 100;
-    background-color: #0f172a;
-    padding-bottom: 10px;
-}
-
-#textInput {
-    width: 100%;
-    padding: 1.2rem;
-    font-size: 1.2rem;
-    border: 2px solid #334155;
-    border-radius: 12px;
-    background-color: #1e293b;
-    color: #fff;
-    outline: none;
-    transition: border-color 0.3s ease;
-}
-
-#textInput:focus {
-    border-color: #38bdf8;
+    background-color: rgba(5, 5, 5, 0.95);
+    padding-bottom: 15px;
+    border-bottom: 1px dashed #1e293b;
 }
 
 .results-section {
@@ -67,84 +184,139 @@ header p {
     gap: 1rem;
 }
 
-.result-card {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #1e293b;
-    padding: 1rem 1.5rem;
-    border-radius: 12px;
-    border: 1px solid #334155;
-    transition: transform 0.2s ease;
-}
-
-.result-card:hover {
-    transform: translateY(-2px);
-    border-color: #475569;
-}
-
-.font-name {
-    font-size: 0.8rem;
-    color: #94a3b8;
-    margin-bottom: 0.3rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-.output-text {
-    font-size: 1.5rem;
-    word-break: break-all;
-}
-
-.copy-btn {
-    background-color: #38bdf8;
-    color: #0f172a;
-    border: none;
-    padding: 0.6rem 1.2rem;
-    border-radius: 8px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.copy-btn:hover {
-    background-color: #0ea5e9;
-}
-
-.copy-btn.copied {
-    background-color: #22c55e;
-    color: white;
-}
-
-@font-face {
-    font-family: 'Good Times';
-    src: url('goodtimes.ttf') format('truetype'); /* Make sure the filename matches exactly! */
-    font-weight: normal;
-    font-style: normal;
-}
-
 @media (min-width: 600px) {
     .results-section {
         display: grid;
-        grid-template-columns: 1fr 1fr; /* Two cards side-by-side */
+        grid-template-columns: 1fr 1fr;
         gap: 1.5rem;
     }
 }
 
-.dropdown-select {
-    width: 100%;
-    margin-top: 1rem;
-    padding: 1rem;
-    font-size: 1.1rem;
-    background-color: #1e293b;
-    color: #fff;
-    border: 2px solid #334155;
-    border-radius: 12px;
-    outline: none;
-    cursor: pointer;
-    transition: border-color 0.3s ease;
+.result-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #0a0a0c;
+    padding: 1rem 1.5rem;
+    border-radius: 4px;
+    border: 1px solid #1e293b;
+    transition: transform 0.2s ease, border-color 0.2s ease;
 }
 
-.dropdown-select:focus {
-    border-color: #38bdf8;
+.result-card:hover {
+    transform: translateY(-2px);
+    border-color: #0df;
+}
+
+.font-name {
+    font-size: 0.8rem;
+    color: #64748b;
+    margin-bottom: 0.4rem;
+    text-transform: uppercase;
+}
+
+.output-text {
+    font-size: 1.2rem;
+    color: #f8fafc;
+    word-break: break-all;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.copy-btn {
+    background-color: transparent;
+    color: #0df;
+    border: 1px solid #0df;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.copy-btn:hover { background-color: rgba(0, 221, 255, 0.1); }
+.copy-btn.copied {
+    background-color: #00ff41;
+    color: #050505;
+    border-color: #00ff41;
+}
+
+/* =========================================
+   TOOL 2: STEALTH MODE (STEGANOGRAPHY)
+   ========================================= */
+.cyber-panel {
+    background-color: #0a0a0c;
+    border: 1px solid #1e293b;
+    padding: 2rem;
+    border-radius: 4px;
+    margin-bottom: 2rem;
+    position: relative;
+}
+
+.cyber-panel h2 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    color: #e2e8f0;
+}
+
+.text-green { color: #00ff41; }
+.text-cyan { color: #0df; }
+
+.panel-desc {
+    color: #64748b;
+    font-size: 0.9rem;
+    margin-bottom: 1.5rem;
+}
+
+.input-group {
+    margin-bottom: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.input-group label {
+    font-size: 0.9rem;
+    color: #94a3b8;
+    text-transform: uppercase;
+}
+
+.secret-input {
+    border-color: #ef4444;
+    color: #ef4444;
+}
+.secret-input:focus {
+    border-color: #ef4444;
+    box-shadow: 0 0 10px rgba(239, 68, 68, 0.2);
+}
+
+.feedback-text {
+    margin-top: 1rem;
+    text-align: center;
+    font-weight: bold;
+    min-height: 20px;
+    color: #00ff41;
+}
+
+.terminal-output-box {
+    margin-top: 1.5rem;
+    background-color: #000;
+    border: 1px dashed #00ff41;
+    padding: 1.5rem;
+    min-height: 80px;
+    word-break: break-all;
+}
+
+.prompt { color: #64748b; }
+
+.blinking-cursor {
+    display: inline-block;
+    width: 10px;
+    height: 1.2rem;
+    background-color: #00ff41;
+    vertical-align: middle;
+    animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
 }
