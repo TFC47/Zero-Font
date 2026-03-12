@@ -316,10 +316,9 @@ document.getElementById('randomBtn').addEventListener('click', () => {
 // 4. STEALTH MODE (ZERO-WIDTH STEGANOGRAPHY)
 // ==========================================
 
-// The Android-Safe Invisible Characters
-const zeroPad = '\u200B';  // Zero-Width Space
-const zeroOne = '\u2060';  // Word Joiner (Safe)
-const zeroZero = '\uFEFF'; // Zero-Width No-Break Space (Safe)
+// The Android-Safe Invisible Characters (Only 2 needed now!)
+const zeroZero = '\u200B'; // Zero-Width Space (Binary 0)
+const zeroOne = '\u2060';  // Word Joiner (Binary 1)
 
 const publicTextInput = document.getElementById('publicTextInput');
 const secretTextInput = document.getElementById('secretTextInput');
@@ -349,16 +348,16 @@ encodeBtn.addEventListener('click', () => {
         return;
     }
 
-    // 1. Convert secret to binary
+    // 1. Convert secret to 16-bit binary (Supports all symbols & emojis!)
+    // Notice we no longer use .join(' ') with a space!
     let binaryStr = secretText.split('').map(char => {
-        return char.charCodeAt(0).toString(2).padStart(8, '0');
-    }).join(' ');
+        return char.charCodeAt(0).toString(2).padStart(16, '0');
+    }).join('');
 
     // 2. Map binary to Android-safe invisible characters
     let invisibleStr = binaryStr.split('').map(bit => {
         if (bit === '0') return zeroZero;
         if (bit === '1') return zeroOne;
-        if (bit === ' ') return zeroPad;
         return '';
     }).join('');
 
@@ -384,8 +383,8 @@ encodeBtn.addEventListener('click', () => {
 decodeBtn.addEventListener('click', () => {
     const mixedText = decodeInput.value;
     
-    // 1. Extract ONLY the safe invisible characters using updated Regex
-    const invisibleText = mixedText.replace(/[^\u200B\u2060\uFEFF]/g, '');
+    // 1. Extract ONLY the safe invisible characters
+    const invisibleText = mixedText.replace(/[^\u200B\u2060]/g, '');
     
     if (!invisibleText) {
         decodeOutput.innerText = "ERROR: NO HIDDEN DATA DETECTED.";
@@ -394,18 +393,21 @@ decodeBtn.addEventListener('click', () => {
         return;
     }
 
-    // 2. Translate safe invisible chars back to binary
+    // 2. Translate invisible chars back to binary
     const binaryStr = invisibleText.split('').map(char => {
         if (char === zeroZero) return '0';
         if (char === zeroOne) return '1';
-        if (char === zeroPad) return ' ';
         return '';
     }).join('');
 
-    // 3. Translate binary back to text
-    const revealedText = binaryStr.split(' ').map(bin => {
-        return String.fromCharCode(parseInt(bin, 2));
-    }).join('');
+    // 3. Translate 16-bit chunks back to text
+    let revealedText = "";
+    for (let i = 0; i < binaryStr.length; i += 16) {
+        const chunk = binaryStr.substring(i, i + 16);
+        if (chunk.length === 16) {
+            revealedText += String.fromCharCode(parseInt(chunk, 2));
+        }
+    }
 
     // Show output
     decodeOutput.innerText = revealedText;
